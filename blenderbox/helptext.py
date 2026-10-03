@@ -342,10 +342,12 @@ references provide detailed CLI workflows and Python SDK guidance."""),
         """Examples:
   blenderbox skills show
   blenderbox skills show blenderbox
+  blenderbox skills show --file references/workflow.md
   blenderbox skills show --file references/cli.md
   blenderbox skills show --file references/python.md --json
 
-Default skill: blenderbox. Default file: SKILL.md. Plain output is Markdown.
+Default skill: blenderbox. Default file: SKILL.md, a tiny entrypoint linking to
+references/workflow.md for the full workflow. Plain output is Markdown.
 --json returns {name, file, content} in a response envelope. --file must identify
 a bundled file; arbitrary filesystem paths are not read."""),
     "skills install": (

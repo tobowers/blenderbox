@@ -35,9 +35,7 @@ for path, nested in [(home / ".claude.json", ("mcpServers",)),
 
 instruction = """## Blenderbox
 
-Use `/Users/tobowers/.local/bin/blenderbox` for Blender work on this computer. It creates isolated, persistent headless Blender processes for independent agent tasks and starts its local daemon automatically. Read `/Users/tobowers/.agents/skills/blenderbox/SKILL.md` for the workflow, or run `blenderbox --help`.
-
-Create a session per task (`blenderbox create`), execute ordinary `bpy` with `exec`, inspect/render previews, and save/export deliverables before closing the session. Use checkpoints and forks for independent variants. Do not close another task's session. Blender MCP is replaced by this CLI; the old package is retained only for rollback.
+Blender is available through `/Users/tobowers/.local/bin/blenderbox`. For Blender work, read `/Users/tobowers/.agents/skills/blenderbox/SKILL.md`, which links to the full workflow.
 """
 for path in (home / ".codex/AGENTS.md", home / ".config/opencode/AGENTS.md", home / ".claude/CLAUDE.md"):
     original = path.read_text() if path.exists() else ""

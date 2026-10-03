@@ -154,11 +154,12 @@ If the command is missing, supply its absolute path. If Blender discovery fails,
 
 ### 2. Install or read the skill
 
-The skill and supporting references ship inside the installed package. They work without this repository and can be inspected without launching Blender or the supervisor:
+The skill has a tiny entrypoint that announces Blender access and links to the full workflow in `references/workflow.md`. Only its short name and description are needed for initial discovery; the workflow is read when an agent starts Blender work. The skill and supporting references ship inside the installed package. They work without this repository and can be inspected without launching Blender or the supervisor:
 
 ```bash
 blenderbox skills list
 blenderbox skills show
+blenderbox skills show --file references/workflow.md
 blenderbox skills show --file references/cli.md
 blenderbox skills show --file references/python.md
 ```
