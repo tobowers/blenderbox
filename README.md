@@ -54,9 +54,11 @@ The runtime uses the Python standard library and has no third-party runtime depe
 
 ### Install the command, then choose your agent skills
 
-Run these commands from the repository root:
+Clone the repository and install the command:
 
 ```bash
+git clone https://github.com/tobowers/blenderbox.git
+cd blenderbox
 uv tool install --python python3 .
 uv tool dir --bin
 ```
