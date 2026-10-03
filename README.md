@@ -15,6 +15,8 @@ blenderbox close "$SESSION"
 
 No Blender MCP server or extension is required. The supervisor starts automatically.
 
+Released under the [MIT License](LICENSE).
+
 - [Why it exists](#why-it-exists)
 - [Install](#install)
 - [Set up your agents](#set-up-your-agents)
