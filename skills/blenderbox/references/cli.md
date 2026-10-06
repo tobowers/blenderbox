@@ -2,6 +2,8 @@
 
 Use `blenderbox help COMMAND` for arguments, examples, defaults and output semantics. `blenderbox help --all` prints the full reference without launching Blender or the daemon.
 
+On macOS, new sessions run a standalone executable outside any `.app` bundle so they do not interfere with opening desktop Blender. `doctor` reports its path under `BLENDERBOX_HOME/engines/`. Blenderbox clones and locally signs just the executable and links to the installed Blender resources; keep that source installation available. Sessions created before 0.2.1 retain their original executable until their owners close them. If one blocks the desktop app, `open -n /Applications/Blender.app` requests a fresh GUI instance. Never close another task's session to fix the desktop app.
+
 ## Model and inspect
 
 ```bash

@@ -9,6 +9,7 @@ import signal
 import socket
 import socketserver
 import subprocess
+import sys
 import threading
 import time
 import uuid
@@ -177,7 +178,11 @@ class Manager:
             executable = "/Applications/Blender.app/Contents/MacOS/Blender"
         if not executable or not Path(executable).is_file() or not os.access(executable, os.X_OK):
             raise BoxError("blender_not_found", "Set BLENDERBOX_BLENDER or pass --blender /path/to/blender")
-        return str(Path(executable).resolve())
+        executable = str(Path(executable).resolve())
+        if sys.platform == "darwin":
+            from .macos import headless_binary
+            return headless_binary(executable, self.root)
+        return executable
 
     def create(self, source=None, blender=None, timeout=60, threads=2, snapshot=None, checkpoint=None):
         binary = self.binary(blender)

@@ -113,6 +113,10 @@ blenderbox create --blender /absolute/path/to/blender
 
 For a default executable, set `BLENDERBOX_BLENDER` in the environment that starts the supervisor. Restart an already running supervisor for that environment change to take effect.
 
+On macOS, Blenderbox prepares a standalone executable under `BLENDERBOX_HOME/engines/HASH/MacOS/Blender`, outside any `.app` bundle. It clones just the executable (using an APFS clone where available), signs the relocated copy locally while preserving its existing runtime flags and entitlements, and links to the installed libraries and resources. It creates no app bundle, `Info.plist`, or `.blend` file association, and never modifies Blender.app. This keeps macOS from treating a windowless agent process as desktop Blender, which can otherwise cause the “application is not open anymore” error. `doctor` and session records report this standalone executable path. Changes to the source executable or bundle metadata create a fresh cached executable. Existing standalone executables and other platforms run directly. Keep the source Blender installation available because its resources are still required.
+
+If upgrading from 0.2.0, existing sessions keep their original app identity until their owners save and close them. Start fresh sessions after restarting the supervisor. To open desktop Blender while an older headless session is still registered, run `open -n /Applications/Blender.app` to request a new GUI instance.
+
 | Setting | Meaning |
 | --- | --- |
 | `BLENDERBOX_HOME` | Persistent state root; defaults to `~/.local/share/blenderbox` |

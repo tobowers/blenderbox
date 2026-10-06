@@ -105,6 +105,33 @@ class Integration(unittest.TestCase):
             b.preview(object="NoSuchObject")
         self.assertEqual(b.status()["status"], "ready")
 
+    @unittest.skipUnless(sys.platform == "darwin", "macOS app identity")
+    def test_macos_worker_runs_outside_desktop_bundle(self):
+        b = self.create()
+        binary = Path(b.status()["blender"])
+        self.assertFalse(any(part.endswith(".app") for part in binary.parts))
+        self.assertFalse((binary.parent.parent / "Info.plist").exists())
+        self.assertFalse(binary.is_symlink())
+        subprocess.run(["/usr/bin/codesign", "--verify", str(binary)], check=True)
+        b.preview(object="Cube", resolution=32, samples=1)
+        # Read the process's actual bundle identity, not only the plist on disk.
+        identity = b.exec("""
+import ctypes
+objc = ctypes.CDLL('/usr/lib/libobjc.A.dylib')
+objc.objc_getClass.argtypes = [ctypes.c_char_p]
+objc.objc_getClass.restype = ctypes.c_void_p
+objc.sel_registerName.argtypes = [ctypes.c_char_p]
+objc.sel_registerName.restype = ctypes.c_void_p
+send_pointer = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(('objc_msgSend', objc))
+send_string = ctypes.CFUNCTYPE(ctypes.c_char_p, ctypes.c_void_p, ctypes.c_void_p)(('objc_msgSend', objc))
+bundle = send_pointer(objc.objc_getClass(b'NSBundle'), objc.sel_registerName(b'mainBundle'))
+identifier = send_pointer(bundle, objc.sel_registerName(b'bundleIdentifier'))
+result = send_string(identifier, objc.sel_registerName(b'UTF8String')).decode() if identifier else None
+""")
+        self.assertIsNone(identity["value"])
+        registered = subprocess.check_output(["/usr/bin/lsappinfo", "info", f"#{b.status()['pid']}"], text=True)
+        self.assertNotIn('bundleID="org.blenderfoundation.blender"', registered)
+
     def test_checkpoint_fork_and_asset_copy(self):
         b = self.create()
         asset = Path(self.temp.name) / "asset.txt"

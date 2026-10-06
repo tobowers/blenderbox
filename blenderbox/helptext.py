@@ -50,6 +50,8 @@ Session rules:
   trusted local filesystem/network access. A process boundary is not a sandbox.
   Native Blender logs: SESSION_WORKSPACE/logs/blender.log.
   Supervisor log: BLENDERBOX_HOME/daemon.log.
+  On macOS, workers use a standalone executable outside any .app bundle under
+  BLENDERBOX_HOME/engines/, linked to the installed Blender resources.
 """
 
 # Each pair is a command's explanation and its operational notes/examples.
@@ -68,7 +70,10 @@ Output: session ID (bbx_...) or a full session record with --json.
 --from is a host path. Relative assets in the source blend must remain available
 until copied into the workspace or packed with bpy. User add-ons are not loaded.
 --blender takes an executable path, not a version number. GPU/profile/version
-management is not implemented. --threads limits Blender render threads only."""),
+management is not implemented. --threads limits Blender render threads only.
+macOS app executables are cloned/signed into a standalone CLI runtime with linked
+resources. No app bundle is created; desktop Blender is unchanged. Existing
+sessions keep their original executable. Keep source Blender resources installed."""),
     "sessions": (
         "List persisted session records, including closed, crashed and timed-out sessions.",
         """Examples:
@@ -288,6 +293,8 @@ Output includes Blenderbox version, daemon PID, Blender path/version, state
 directory and transport. It runs Blender --version, not a persistent session.
 Discovery uses BLENDERBOX_BLENDER, then blender on PATH, then the default macOS
 app executable. If missing, set BLENDERBOX_BLENDER or use create --blender PATH.
+On macOS, the reported executable is a standalone copy under BLENDERBOX_HOME/engines/,
+outside any app bundle, locally signed and linked to the source Blender resources.
 For startup failures inspect BLENDERBOX_HOME/daemon.log and session blender.log."""),
     "daemon": (
         "Start, inspect or stop the automatically managed local supervisor.",
